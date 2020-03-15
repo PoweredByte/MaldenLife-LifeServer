@@ -17,11 +17,6 @@ _side = [_this,1,sideUnknown,[civilian]] call BIS_fnc_param;
 _ownerID = [_this,2,objNull,[objNull]] call BIS_fnc_param;
 
 if (isNull _ownerID) exitWith {};
-
-if (LIFE_SETTINGS(getNumber,"player_deathLog") isEqualTo 1) then {
-    _ownerID addMPEventHandler ["MPKilled", {_this call fn_whoDoneIt}];
-};
-
 _ownerID = owner _ownerID;
 
 _query = switch (_side) do {
@@ -31,9 +26,8 @@ _query = switch (_side) do {
     case civilian: {format ["SELECT pid, name, cash, bankacc, adminlevel, donorlevel, civ_licenses, arrested, civ_gear, civ_stats, civ_alive, civ_position, playtime FROM players WHERE pid='%1'",_uid];};
     // Independent - 10 entries returned
     case independent: {format ["SELECT pid, name, cash, bankacc, adminlevel, donorlevel, med_licenses, mediclevel, med_gear, med_stats, playtime FROM players WHERE pid='%1'",_uid];};
-    //East
-     case east: {format["SELECT pid, name, cash, bankacc, adminlevel, donorlevel, adac_licenses, adaclevel, adac_gear, adac_stats, playtime FROM players WHERE pid='%1'",_uid];};
-
+    // East - 10 entries returned
+    case east: {format["SELECT pid, name, cash, bankacc, adminlevel, donorlevel, adac_licenses, adaclevel, adac_gear, adac_stats, playtime FROM players WHERE pid='%1'",_uid];};
 };
 
 _tickTime = diag_tickTime;
@@ -177,8 +171,7 @@ switch (_side) do {
             TON_fnc_playtime_values_request pushBack [_uid, _new];
         };
         [_uid,_new select 1] call TON_fnc_setPlayTime;
-      };
-
+    };
 };
 
 publicVariable "TON_fnc_playtime_values_request";

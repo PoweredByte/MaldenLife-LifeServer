@@ -74,8 +74,8 @@ publicVariable "life_server_extDB_notLoaded";
 
 _timeStamp = diag_tickTime;
 diag_log "----------------------------------------------------------------------------------------------------";
-diag_log "---------------------------------- Starting ZionHost Server Init -----------------------------------";
-diag_log format["------------------------------------------ Version %1 -------------------------------------------",(LIFE_SETTINGS(getText,"framework_version"))];
+diag_log "---------------------------------- Starting Altis Life Server Init ---------------------------------";
+diag_log "------------------------------------------ Version 5.0.0 -------------------------------------------";
 diag_log "----------------------------------------------------------------------------------------------------";
 
 if (LIFE_SETTINGS(getNumber,"save_civilian_position_restart") isEqualTo 1) then {
@@ -134,12 +134,12 @@ life_copLevel = 0;
 life_adacLevel = 0;
 CONST(JxMxE_PublishVehicle,"false");
 
-/* Setup radio channels for west/independent/civilian */
-life_radio_west = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
+life_radio_west = radioChannelCreate [[0, 0.95, 1, 0.8], "Polizeifunk", "%UNIT_NAME", []];
+/*
 life_radio_civ = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
-life_radio_indep = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
-life_radio_east = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
 
+life_radio_indep = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
+ */
 /* Set the amount of gold in the federal reserve at mission start */
 fed_bank setVariable ["safe",count playableUnits,true];
 [] spawn TON_fnc_federalUpdate;
@@ -163,7 +163,7 @@ TON_fnc_requestClientID =
 life_wanted_list = [];
 
 cleanupFSM = [] execFSM "\life_server\FSM\cleanup.fsm";
-
+/*
 [] spawn {
     for "_i" from 0 to 1 step 0 do {
         uiSleep (30 * 60);
@@ -172,7 +172,7 @@ cleanupFSM = [] execFSM "\life_server\FSM\cleanup.fsm";
         } forEach [Dealer_1,Dealer_2,Dealer_3];
     };
 };
-
+*/
 [] spawn TON_fnc_initHouses;
 cleanup = [] spawn TON_fnc_cleanup;
 
@@ -185,10 +185,10 @@ publicVariable "TON_fnc_playtime_values_request";
 
 
 /* Setup the federal reserve building(s) */
-private _vaultHouse = [[["Altis", "Land_Research_house_V1_F"], ["Tanoa", "Land_Medevac_house_V1_F"]]] call TON_fnc_terrainSort;
-private _altisArray = [16019.5,16952.9,0];
+private _vaultHouse = [[["Malden", "Land_Cargo_House_V1_F"], ["Tanoa", "Land_Medevac_house_V1_F"]]] call TON_fnc_terrainSort;
+private _altisArray = [9720.165,5916.738,2.082];
 private _tanoaArray = [11074.2,11501.5,0.00137329];
-private _pos = [[["Altis", _altisArray], ["Tanoa", _tanoaArray]]] call TON_fnc_terrainSort;
+private _pos = [[["Malden", _altisArray], ["Tanoa", _tanoaArray]]] call TON_fnc_terrainSort;
 
 _dome = nearestObject [_pos,"Land_Dome_Big_F"];
 _rsb = nearestObject [_pos,_vaultHouse];
@@ -207,16 +207,19 @@ publicVariable "life_server_isReady";
 /* Initialize hunting zone(s) */
 aiSpawn = ["hunting_zone",30] spawn TON_fnc_huntingZone;
 
+// We create the attachment point to be used for objects to attachTo load virtually in vehicles.
+life_attachment_point = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+life_attachment_point setPosASL [0,0,0];
+life_attachment_point setVectorDirAndUp [[0,1,0], [0,0,1]];
+
+// Sharing the point of attachment with all players.
+publicVariable "life_attachment_point";
 server_corpses = [];
 addMissionEventHandler ["EntityRespawned", {_this call TON_fnc_entityRespawned}];
 
-life_cop_calls = [];
-publicVariable "life_cop_calls";
-life_med_calls = [];
-publicVariable "life_med_calls";
-
-
+//Phone
+call ton_fnc_phoneInit;
 
 diag_log "----------------------------------------------------------------------------------------------------";
-diag_log format ["               End of ZionHost Server Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];
+diag_log format ["               End of Altis Life Server Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];
 diag_log "----------------------------------------------------------------------------------------------------";

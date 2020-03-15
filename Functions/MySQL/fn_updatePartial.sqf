@@ -51,6 +51,7 @@ switch (_mode) do {
             case civilian: {_query = format ["UPDATE players SET civ_gear='%1' WHERE pid='%2'",_value,_uid];};
             case independent: {_query = format ["UPDATE players SET med_gear='%1' WHERE pid='%2'",_value,_uid];};
             case east: {_query = format["UPDATE players SET adac_gear='%1' WHERE pid='%2'",_value,_uid];};
+
         };
     };
 

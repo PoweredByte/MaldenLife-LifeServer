@@ -14,7 +14,7 @@ compileFinal "
         ""_item"",
         [""_stack"",[],[[]]]
     ];
-
+    
     _stack findIf {_item in _x};
 ";
 
@@ -25,28 +25,27 @@ compileFinal "
     if (isNull _ret) exitWith {};
     if (isNil ""_ret"") exitWith {};
 
-    [life_atmbank,life_cash,owner player,player,profileNameSteam,getPlayerUID player,playerSide] remoteExecCall [""life_fnc_adminInfo"",_ret];
+    [life_atmbank,zionhost_v_money835,owner player,player,profileNameSteam,getPlayerUID player,playerSide] remoteExecCall [""life_fnc_adminInfo"",_ret];
 ";
 publicVariable "TON_fnc_player_query";
 publicVariable "TON_fnc_index";
 
-TON_fnc_isNumber =
+TON_fnc_isnumber =
 compileFinal "
-    params [
-        ['_string','',['']]
-    ];
-    if (_string isEqualTo '') exitWith {false};
-    private _array = _string splitString '';
-    private _return = true;
+    private [""_valid"",""_array""];
+    _valid = [""0"",""1"",""2"",""3"",""4"",""5"",""6"",""7"",""8"",""9""];
+    _array = [_this select 0] call KRON_StrToArray;
+    _return = true;
+
     {
-        if !(_x in ['0','1','2','3','4','5','6','7','8','9']) exitWith {
+        if (!(_x in _valid)) exitWith {
             _return = false;
         };
     } forEach _array;
     _return;
 ";
 
-publicVariable "TON_fnc_isNumber";
+publicVariable "TON_fnc_isnumber";
 
 TON_fnc_clientGangKick =
 compileFinal "
@@ -131,8 +130,6 @@ private [""_msg"",""_to""];
     if (_msg isEqualTo """") exitWith {hint localize ""STR_CELLMSG_EnterMSG"";ctrlShow[3022,true];};
 
     [_msg,name player,5,mapGridPosition player,player] remoteExecCall [""TON_fnc_clientMessage"",independent];
-    life_med_calls pushBack [(name player),(position player),_msg,servertime,"""",player];
-    publicVariable ""life_med_calls"";
     [] call life_fnc_cellphone;
     hint format [localize ""STR_CELLMSG_ToEMS"",_to,_msg];
     ctrlShow[3022,true];
@@ -171,8 +168,6 @@ compileFinal "
     if (_length > 400) exitWith {hint localize ""STR_CELLMSG_LIMITEXCEEDED"";ctrlShow[3016,true];};
 
     [_msg,name player,1,mapGridPosition player,player] remoteExecCall [""TON_fnc_clientMessage"",-2];
-    life_cop_calls pushBack [(name player),(position player),_msg,servertime,"""", player];
-    publicVariable ""life_cop_calls"";
     [] call life_fnc_cellphone;
     hint format [localize ""STR_CELLMSG_ToPerson"",_to,_msg];
     ctrlShow[3016,true];
@@ -228,11 +223,27 @@ compileFinal "
     ctrlShow[3021,true];
 ";
 
+TON_fnc_cell_polizeimsgall = //NEW
+compileFinal "
+ if(isServer) exitWith {};
+ if((call life_coplevel) < 4) exitWith {hint ""Du bist dazu nicht berechtigt!"";};
+ private[""_msg"",""_from""];
+ ctrlShow[3023,false];
+ _msg = ctrlText 3003;
+ if(_msg == """") exitWith {hint ""Du musst eine Nachricht eingeben!"";ctrlShow[3023,true];};
+
+ [_msg,name player,6] remoteExecCall [""TON_fnc_clientMessage"",-2];
+ [] call life_fnc_cellphone;
+ hint format[""gesendete Rundfunknachricht: %1"",_msg];
+ ctrlShow[3023,true];
+";
+
 publicVariable "TON_fnc_cell_textmsg";
 publicVariable "TON_fnc_cell_textcop";
 publicVariable "TON_fnc_cell_textadmin";
 publicVariable "TON_fnc_cell_adminmsg";
 publicVariable "TON_fnc_cell_adminmsgall";
+publicVariable "TON_fnc_cell_polizeimsgall";
 publicVariable "TON_fnc_cell_emsrequest";
 //Client Message
 /*
@@ -317,6 +328,14 @@ compileFinal "
             hint parseText format [""<t color='#FFCC00'><t size='2'><t align='center'>EMS Request<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>You<br/><t color='#33CC33'>From: <t color='#ffffff'>%1<br/><t color='#33CC33'>Coords: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%3"",_from,_loc,_msg];
 
             [""TextMessage"",[format [""EMS Request from %1"",_from]]] call bis_fnc_showNotification;
+        };
+        
+        case 6: {
+             private[""_message"",""_admin""];
+            _message = format[""POLIZEI RUNDFUNK: %1"",_msg];
+            hint parseText format [""<t color='#0000FF'><t size='2'><t align='center'>Polizei Rundfunk<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Alle Bürger<br/><t color='#33CC33'>Von: <t color='#ffffff'>Polizei Altis<br/><br/><t color='#33CC33'>Mitteilung:<br/><t color='#ffffff'>%1"",_msg];
+            [""PolizeiRundfunk"",[""Neue Polizei Mitteilung""]] call bis_fnc_showNotification;
+            systemChat _message;
         };
     };
 ";

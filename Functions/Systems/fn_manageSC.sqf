@@ -36,4 +36,13 @@ switch (_side) do {
             life_radio_indep radioChannelRemove [_unit];
         };
     };
+
+    case east: {
+        if (_bool) then {
+            life_radio_adac radioChannelAdd [_unit];
+        } else {
+            life_radio_adac radioChannelRemove [_unit];
+        };
+    };
+
 };

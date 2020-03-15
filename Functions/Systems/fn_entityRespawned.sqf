@@ -1,6 +1,6 @@
 /*
     File: fn_entityRespawned.sqf
-    Author: DomT602
+    Author: 
     Description:
     Called when a player respawns (A3 respawn)
 */

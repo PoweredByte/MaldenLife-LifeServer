@@ -52,7 +52,6 @@ switch (_side) do {
     case civilian: {_playtime_update set[2,_playtime];};
     case independent: {_playtime_update set[1,_playtime];};
     case east: {_playtime_update set[1,_playtime];};
-
 };
 _playtime_update = [_playtime_update] call DB_fnc_mresArray;
 

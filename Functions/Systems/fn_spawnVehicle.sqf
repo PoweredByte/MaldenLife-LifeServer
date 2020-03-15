@@ -16,7 +16,6 @@ params [
     ["_dir", 0, [0]],
     "_spawntext"
 ];
-
 private _unit_return = _unit;
 private _name = name _unit;
 private _side = side _unit;
@@ -42,7 +41,6 @@ if (EXTDB_SETTING(getNumber,"DebugMode") isEqualTo 1) then {
 };
 
 if (_queryResult isEqualType "") exitWith {};
-
 private _vInfo = _queryResult;
 if (isNil "_vInfo") exitWith {serv_sv_use deleteAt _servIndex;};
 if (count _vInfo isEqualTo 0) exitWith {serv_sv_use deleteAt _servIndex;};
@@ -56,7 +54,6 @@ if ((_vInfo select 6) isEqualTo 1) exitWith {
     serv_sv_use deleteAt _servIndex;
     [1,"STR_Garage_SQLError_Active",true,[_vInfo select 2]] remoteExecCall ["life_fnc_broadcast",_unit];
 };
-
 private "_nearVehicles";
 if !(_sp isEqualType "") then {
     _nearVehicles = nearestObjects[_sp,["Car","Air","Ship"],10];
@@ -77,7 +74,6 @@ private _gear = [(_vInfo select 10)] call DB_fnc_mresToArray;
 private _damage = [call compile (_vInfo select 12)] call DB_fnc_mresToArray;
 private _wasIllegal = _vInfo select 13;
 _wasIllegal = if (_wasIllegal isEqualTo 1) then { true } else { false };
-
 [_query,1] call DB_fnc_asyncCall;
 
 private "_vehicle";
@@ -107,29 +103,28 @@ _vehicle setVariable ["vehicle_info_owners",[[_pid,_name]],true];
 _vehicle setVariable ["dbInfo",[(_vInfo select 4),(_vInfo select 7)],true];
 _vehicle disableTIEquipment true; //No Thermals.. They're cheap but addictive.
 [_vehicle] call life_fnc_clearVehicleAmmo;
-
 if (LIFE_SETTINGS(getNumber,"save_vehicle_virtualItems") isEqualTo 1) then {
 
     _vehicle setVariable ["Trunk",_trunk,true];
-
+    
     if (_wasIllegal) then {
         private _refPoint = if (_sp isEqualType "") then {getMarkerPos _sp;} else {_sp;};
-
+        
         private _distance = 100000;
         private "_location";
 
         {
             private _tempLocation = nearestLocation [_refPoint, _x];
             private _tempDistance = _refPoint distance _tempLocation;
-
+    
             if (_tempDistance < _distance) then {
                 _location = _tempLocation;
                 _distance = _tempDistance;
             };
             false
-
+    
         } count ["NameCityCapital", "NameCity", "NameVillage"];
-
+ 
         _location = text _location;
         [1,"STR_NOTF_BlackListedVehicle",true,[_location,_name]] remoteExecCall ["life_fnc_broadcast",west];
 
@@ -139,7 +134,6 @@ if (LIFE_SETTINGS(getNumber,"save_vehicle_virtualItems") isEqualTo 1) then {
 } else {
     _vehicle setVariable ["Trunk",[[],0],true];
 };
-
 if (LIFE_SETTINGS(getNumber,"save_vehicle_fuel") isEqualTo 1) then {
     _vehicle setFuel (_vInfo select 11);
     }else{
@@ -165,7 +159,6 @@ if (count _gear > 0 && (LIFE_SETTINGS(getNumber,"save_vehicle_inventory") isEqua
         _vehicle addBackpackCargoGlobal [((_backpacks select 0) select _i), ((_backpacks select 1) select _i)];
     };
 };
-
 if (count _damage > 0 && (LIFE_SETTINGS(getNumber,"save_vehicle_damage") isEqualTo 1)) then {
     _parts = getAllHitPointsDamage _vehicle;
 
@@ -174,22 +167,48 @@ if (count _damage > 0 && (LIFE_SETTINGS(getNumber,"save_vehicle_damage") isEqual
     };
 };
 
-//Sets of animations
-if ((_vInfo select 1) isEqualTo "civ" && (_vInfo select 2) isEqualTo "B_Heli_Light_01_F" && !((_vInfo select 8) isEqualTo 13)) then {
-    [_vehicle,"civ_littlebird",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
+//                  COPS                    \\
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["B_Heli_Light_01_F"]) then {
+    [_vehicle,"cop_hummingbird",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
-
-if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["C_Offroad_01_F","B_MRAP_01_F","C_SUV_01_F","C_Hatchback_01_sport_F","B_Heli_Light_01_F","B_Heli_Transport_01_F"]) then {
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["C_Offroad_01_F"]) then {
     [_vehicle,"cop_offroad",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["C_SUV_01_F"]) then {
+    [_vehicle,"cop_suv",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
+};
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["C_Hatchback_01_sport_F"]) then {
+    [_vehicle,"cop_cop_limousinesuv",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
+};
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["B_MRAP_01_F"]) then {
+    [_vehicle,"cop_hunter",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
+};
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["B_LSV_01_unarmed_black_F"]) then {
+    [_vehicle,"cop_qilin",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
+};
+if ((_vInfo select 1) isEqualTo "cop" && ((_vInfo select 2)) in ["C_Offroad_02_unarmed_F"]) then {
+    [_vehicle,"cop_mb4wd",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
+};
+//                  MEDICS                  \\
 
 if ((_vInfo select 1) isEqualTo "med" && (_vInfo select 2) isEqualTo "C_Offroad_01_F") then {
     [_vehicle,"med_offroad",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
-
+//                  ADAC                    \\
+/*
 if ((_vInfo select 1) isEqualTo "adac" && (_vInfo select 2) isEqualTo "C_Offroad_01_F") then {
  [_vehicle,"adac_offroad",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
 
+*/
+
+//
 [1,_spawntext] remoteExecCall ["life_fnc_broadcast",_unit];
 serv_sv_use deleteAt _servIndex;
+[_vid, _vehicle, 3] spawn mav_tuning_fnc_getTuningFromDB; 
+
+//      --      WIP     --      \\
+/*
+_plate1 = str _plate;
+[_vehicle] setPlateNumber _plate1;
+*/

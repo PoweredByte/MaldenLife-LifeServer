@@ -12,6 +12,18 @@ class CfgPatches {
 class CfgFunctions {
     class MySQL_Database {
         tag = "DB";
+
+		class Personalausweis
+		{
+			file = "\life_server\Functions\felixvonstudsinske\Personalausweis";
+			class PersoPreInitServer{preInit = 1;};
+			class PersoAbfrage {};
+			class PersoNeu {};
+			class PersoUpdate {};
+			class PersoLoeschen{};
+			class PersoUpdateKomplett{};
+		};
+		
         class MySQL
         {
             file = "\life_server\Functions\MySQL";
@@ -112,6 +124,16 @@ class CfgFunctions {
             class setPlayTime {};
             class getPlayTime {};
         };
+		
+		class Phone {
+			file = "\life_server\Functions\Phone";
+			class phoneManagerExtra {};
+			class phoneManager {};
+			class phoneInit {};
+			class phoneOvertime {};
+			class phoneDisconnect {};
+		};
+
     };
 };
 

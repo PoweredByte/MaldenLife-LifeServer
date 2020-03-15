@@ -146,7 +146,14 @@ _thread = [_query,1] call DB_fnc_asyncCall;
 if (!isNil "_vehicle" && {!isNull _vehicle}) then {
     deleteVehicle _vehicle;
 };
+{
+  deleteVehicle _x;
+} forEach attachedObjects _vehicle;
 
 life_garage_store = false;
 (owner _unit) publicVariableClient "life_garage_store";
 [1,_storetext] remoteExecCall ["life_fnc_broadcast",(owner _unit)];
+
+private _class = ["PortableHelipadLight_01_blue_F"]; //classname of the object
+
+ 
