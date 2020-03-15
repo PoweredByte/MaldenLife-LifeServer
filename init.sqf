@@ -74,7 +74,7 @@ publicVariable "life_server_extDB_notLoaded";
 
 _timeStamp = diag_tickTime;
 diag_log "----------------------------------------------------------------------------------------------------";
-diag_log "---------------------------------- Starting Altis Life Server Init ---------------------------------";
+diag_log "---------------------------------- Starting ZionHost Server Init -----------------------------------";
 diag_log format["------------------------------------------ Version %1 -------------------------------------------",(LIFE_SETTINGS(getText,"framework_version"))];
 diag_log "----------------------------------------------------------------------------------------------------";
 
@@ -210,6 +210,13 @@ aiSpawn = ["hunting_zone",30] spawn TON_fnc_huntingZone;
 server_corpses = [];
 addMissionEventHandler ["EntityRespawned", {_this call TON_fnc_entityRespawned}];
 
+life_cop_calls = [];
+publicVariable "life_cop_calls";
+life_med_calls = [];
+publicVariable "life_med_calls";
+
+
+
 diag_log "----------------------------------------------------------------------------------------------------";
-diag_log format ["               End of Altis Life Server Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];
+diag_log format ["               End of ZionHost Server Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];
 diag_log "----------------------------------------------------------------------------------------------------";
