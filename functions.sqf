@@ -14,7 +14,7 @@ compileFinal "
         ""_item"",
         [""_stack"",[],[[]]]
     ];
-    
+
     _stack findIf {_item in _x};
 ";
 
@@ -130,6 +130,8 @@ private [""_msg"",""_to""];
     if (_msg isEqualTo """") exitWith {hint localize ""STR_CELLMSG_EnterMSG"";ctrlShow[3022,true];};
 
     [_msg,name player,5,mapGridPosition player,player] remoteExecCall [""TON_fnc_clientMessage"",independent];
+    life_med_calls pushBack [(name player),(position player),_msg,servertime,"""",player];
+    publicVariable ""life_med_calls"";
     [] call life_fnc_cellphone;
     hint format [localize ""STR_CELLMSG_ToEMS"",_to,_msg];
     ctrlShow[3022,true];
@@ -168,6 +170,8 @@ compileFinal "
     if (_length > 400) exitWith {hint localize ""STR_CELLMSG_LIMITEXCEEDED"";ctrlShow[3016,true];};
 
     [_msg,name player,1,mapGridPosition player,player] remoteExecCall [""TON_fnc_clientMessage"",-2];
+    life_cop_calls pushBack [(name player),(position player),_msg,servertime,"""", player];
+    publicVariable ""life_cop_calls"";
     [] call life_fnc_cellphone;
     hint format [localize ""STR_CELLMSG_ToPerson"",_to,_msg];
     ctrlShow[3016,true];
@@ -329,7 +333,7 @@ compileFinal "
 
             [""TextMessage"",[format [""EMS Request from %1"",_from]]] call bis_fnc_showNotification;
         };
-        
+
         case 6: {
              private[""_message"",""_admin""];
             _message = format[""POLIZEI RUNDFUNK: %1"",_msg];

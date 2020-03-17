@@ -220,6 +220,13 @@ addMissionEventHandler ["EntityRespawned", {_this call TON_fnc_entityRespawned}]
 //Phone
 call ton_fnc_phoneInit;
 
+life_cop_calls = [];
+publicVariable "life_cop_calls";
+life_med_calls = [];
+publicVariable "life_med_calls";
+
+
+
 diag_log "----------------------------------------------------------------------------------------------------";
 diag_log format ["               End of Altis Life Server Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];
 diag_log "----------------------------------------------------------------------------------------------------";
