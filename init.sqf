@@ -225,6 +225,11 @@ publicVariable "life_cop_calls";
 life_med_calls = [];
 publicVariable "life_med_calls";
 
+civilian setFriend[east, 1];
+east setFriend [west, 1];
+west setFriend [east, 1];
+resistance setFriend [east, 1];
+east setFriend [resistance, 1];
 
 
 diag_log "----------------------------------------------------------------------------------------------------";
