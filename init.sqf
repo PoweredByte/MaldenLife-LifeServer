@@ -135,11 +135,13 @@ life_adacLevel = 0;
 CONST(JxMxE_PublishVehicle,"false");
 
 life_radio_west = radioChannelCreate [[0, 0.95, 1, 0.8], "Polizeifunk", "%UNIT_NAME", []];
-/*
+
 life_radio_civ = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
 
+life_radio_east = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
+
 life_radio_indep = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
- */
+
 /* Set the amount of gold in the federal reserve at mission start */
 fed_bank setVariable ["safe",count playableUnits,true];
 [] spawn TON_fnc_federalUpdate;
@@ -218,19 +220,12 @@ server_corpses = [];
 addMissionEventHandler ["EntityRespawned", {_this call TON_fnc_entityRespawned}];
 
 //Phone
-call ton_fnc_phoneInit;
+//call ton_fnc_phoneInit;
 
 life_cop_calls = [];
 publicVariable "life_cop_calls";
 life_med_calls = [];
 publicVariable "life_med_calls";
-
-civilian setFriend[east, 1];
-east setFriend [west, 1];
-west setFriend [east, 1];
-resistance setFriend [east, 1];
-east setFriend [resistance, 1];
-
 
 diag_log "----------------------------------------------------------------------------------------------------";
 diag_log format ["               End of Altis Life Server Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];

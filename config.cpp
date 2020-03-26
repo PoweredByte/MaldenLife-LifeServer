@@ -23,7 +23,7 @@ class CfgFunctions {
 			class PersoLoeschen{};
 			class PersoUpdateKomplett{};
 		};
-		
+
         class MySQL
         {
             file = "\life_server\Functions\MySQL";
@@ -124,15 +124,15 @@ class CfgFunctions {
             class setPlayTime {};
             class getPlayTime {};
         };
-		
-		class Phone {
+
+		/*class Phone {
 			file = "\life_server\Functions\Phone";
 			class phoneManagerExtra {};
 			class phoneManager {};
 			class phoneInit {};
 			class phoneOvertime {};
 			class phoneDisconnect {};
-		};
+		};*/
 
     };
 };
