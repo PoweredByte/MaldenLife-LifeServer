@@ -213,7 +213,7 @@ server_corpses = [];
 addMissionEventHandler ["EntityRespawned", {_this call TON_fnc_entityRespawned}];
 
 //Phone
-//call ton_fnc_phoneInit;
+call ton_fnc_phoneInit;
 
 life_cop_calls = [];
 publicVariable "life_cop_calls";
